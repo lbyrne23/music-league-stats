@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark Spotify-inspired theme */
+    --background: 220 16% 6%;
+    --foreground: 0 0% 95%;
+
+    --card: 220 16% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 220 16% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 142 70% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 16% 16%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 220 16% 18%;
+    --muted-foreground: 220 10% 55%;
+
+    --accent: 45 100% 60%;
+    --accent-foreground: 220 16% 6%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 16% 18%;
+    --input: 220 16% 18%;
+    --ring: 142 70% 45%;
+
+    --radius: 0.75rem;
+
+    /* Custom colors */
+    --gold: 45 100% 60%;
+    --silver: 220 10% 70%;
+    --bronze: 30 60% 50%;
+    --spotify-green: 142 70% 45%;
+    --vinyl-dark: 220 20% 8%;
+    --glow-green: 142 70% 45%;
+
+    --sidebar-background: 220 16% 8%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 142 70% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 16% 14%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 220 16% 18%;
+    --sidebar-ring: 142 70% 45%;
+  }
+
+  .dark {
+    --background: 220 16% 6%;
+    --foreground: 0 0% 95%;
+    --card: 220 16% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 220 16% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 142 70% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 16% 16%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 220 16% 18%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 45 100% 60%;
+    --accent-foreground: 220 16% 6%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 16% 18%;
+    --input: 220 16% 18%;
+    --ring: 142 70% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+  }
+
+  code, pre, .mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer utilities {
+  .glow-green {
+    box-shadow: 0 0 20px hsl(var(--glow-green) / 0.3),
+                0 0 40px hsl(var(--glow-green) / 0.1);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 20px hsl(var(--gold) / 0.4),
+                0 0 40px hsl(var(--gold) / 0.2);
+  }
+
+  .gradient-vinyl {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--vinyl-dark)) 0%,
+      hsl(220 20% 12%) 50%,
+      hsl(var(--vinyl-dark)) 100%
+    );
+  }
+
+  .gradient-card {
+    background: linear-gradient(
+      145deg,
+      hsl(var(--card)) 0%,
+      hsl(220 16% 8%) 100%
+    );
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(45 100% 60%) 0%, hsl(35 100% 50%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-green {
+    background: linear-gradient(135deg, hsl(142 70% 50%) 0%, hsl(142 60% 40%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-glow-green {
+    border-color: hsl(var(--spotify-green) / 0.5);
+    box-shadow: inset 0 0 20px hsl(var(--spotify-green) / 0.1);
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin 8s linear infinite;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
