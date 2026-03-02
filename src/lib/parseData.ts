@@ -178,6 +178,11 @@ export function calculateLeaderboard(): LeaderboardEntry[] {
     submissionLookup.set(key, s.submitterId);
   });
   
+  // Pre-build set of who voted in which round (Music League rule: if you don't
+  // vote in a round, you forfeit the points your submission earned that round)
+  const votedInRound = new Set<string>();
+  votes.forEach(v => votedInRound.add(`${v.voterId}_${v.roundId}`));
+
   // Calculate points per competitor per round
   const pointsByCompetitorByRound = new Map<string, Map<string, number>>();
   
@@ -185,6 +190,9 @@ export function calculateLeaderboard(): LeaderboardEntry[] {
     const key = `${vote.spotifyUri}_${vote.roundId}`;
     const submitterId = submissionLookup.get(key);
     if (!submitterId) return;
+
+    // If submitter didn't vote: positive points forfeited, but negatives still apply
+    if (!votedInRound.has(`${submitterId}_${vote.roundId}`) && vote.points > 0) return;
     
     if (!pointsByCompetitorByRound.has(submitterId)) {
       pointsByCompetitorByRound.set(submitterId, new Map());
@@ -258,10 +266,16 @@ export function getRoundResults(): RoundResult[] {
     });
     
     const pointsBySubmitter = new Map<string, number>();
+
+    // Who voted in this round?
+    const votersThisRound = new Set(roundVotes.map(v => v.voterId));
     
     roundVotes.forEach(vote => {
       const submission = submissionByUri.get(vote.spotifyUri);
       if (!submission) return;
+
+      // If submitter didn't vote: positive points forfeited, but negatives still apply
+      if (!votersThisRound.has(submission.submitterId) && vote.points > 0) return;
       
       const current = pointsBySubmitter.get(submission.submitterId) || 0;
       pointsBySubmitter.set(submission.submitterId, current + vote.points);
