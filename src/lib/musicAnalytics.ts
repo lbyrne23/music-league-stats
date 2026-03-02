@@ -68,13 +68,48 @@ function getSpotifyEmbedUrl(uri: string): string {
   return `https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0`;
 }
 
-function buildPointsLookup(votes: ReturnType<typeof getVotes>) {
+function buildPointsLookup(votes: ReturnType<typeof getVotes>, votedInRound?: Set<string>) {
+  const points = new Map<string, number>();
+  const voters = new Map<string, number>();
+  const negatives = new Map<string, number>();
+
+  // We need submissionLookup to check if submitter voted — caller passes votedInRound when needed
+  votes.forEach(vote => {
+    const key = `${vote.spotifyUri}_${vote.roundId}`;
+    points.set(key, (points.get(key) || 0) + vote.points);
+    voters.set(key, (voters.get(key) || 0) + 1);
+    if (vote.points < 0) {
+      negatives.set(key, (negatives.get(key) || 0) + 1);
+    }
+  });
+
+  return { points, voters, negatives };
+}
+
+// Builds points earned per track key, respecting the Music League rule that
+// a submitter forfeits their round points if they didn't vote that round.
+function buildValidatedPointsLookup(
+  votes: ReturnType<typeof getVotes>,
+  submissions: ReturnType<typeof getSubmissions>
+) {
+  const votedInRound = new Set<string>();
+  votes.forEach(v => votedInRound.add(`${v.voterId}_${v.roundId}`));
+
+  const submissionLookup = new Map<string, string>(); // key -> submitterId
+  submissions.forEach(s => {
+    submissionLookup.set(`${s.spotifyUri}_${s.roundId}`, s.submitterId);
+  });
+
   const points = new Map<string, number>();
   const voters = new Map<string, number>();
   const negatives = new Map<string, number>();
 
   votes.forEach(vote => {
     const key = `${vote.spotifyUri}_${vote.roundId}`;
+    const submitterId = submissionLookup.get(key);
+    const didVote = submitterId && votedInRound.has(`${submitterId}_${vote.roundId}`);
+    // Positives forfeited if submitter didn't vote; negatives always apply
+    if (!submitterId || (!didVote && vote.points > 0)) return;
     points.set(key, (points.get(key) || 0) + vote.points);
     voters.set(key, (voters.get(key) || 0) + 1);
     if (vote.points < 0) {
@@ -93,7 +128,7 @@ export function getArtistStats(): ArtistStats[] {
   const competitors = getCompetitors();
 
   const competitorMap = new Map(competitors.map(c => [c.id, c.name]));
-  const { points: pointsLookup } = buildPointsLookup(votes);
+  const { points: pointsLookup } = buildValidatedPointsLookup(votes, submissions);
 
   const artistMap = new Map<string, ArtistStats>();
 
@@ -130,7 +165,7 @@ export function getArtistStats(): ArtistStats[] {
 export function getAlbumStats(): AlbumStats[] {
   const submissions = getSubmissions();
   const votes = getVotes();
-  const { points: pointsLookup } = buildPointsLookup(votes);
+  const { points: pointsLookup } = buildValidatedPointsLookup(votes, submissions);
 
   const albumMap = new Map<string, AlbumStats>();
 
@@ -187,7 +222,7 @@ export function getRoundStats(): RoundStats[] {
   const competitors = getCompetitors();
 
   const competitorMap = new Map(competitors.map(c => [c.id, c.name]));
-  const { points: pointsLookup } = buildPointsLookup(votes);
+  const { points: pointsLookup } = buildValidatedPointsLookup(votes, submissions);
 
   return rounds.map(round => {
     const roundSubs = submissions.filter(s => s.roundId === round.id);
@@ -323,8 +358,8 @@ export function getSubmitterProfiles(): SubmitterMusicProfile[] {
     submissionLookup.set(`${sub.spotifyUri}_${sub.roundId}`, sub.artists);
   });
 
-  // Points earned per submitter (via votes on their tracks)
-  const { points: pointsLookup } = buildPointsLookup(votes);
+  // Points earned per submitter — validated: forfeited if submitter didn't vote that round
+  const { points: pointsLookup } = buildValidatedPointsLookup(votes, submissions);
   const pointsEarned = new Map<string, number>();
   submissions.forEach(sub => {
     const pts = pointsLookup.get(`${sub.spotifyUri}_${sub.roundId}`) || 0;
@@ -446,7 +481,7 @@ function buildAllTracks(): TrackWithStats[] {
 
   const competitorMap = new Map(competitors.map(c => [c.id, c.name]));
   const roundMap = new Map(rounds.map(r => [r.id, r.name]));
-  const { points, voters, negatives } = buildPointsLookup(votes);
+  const { points, voters, negatives } = buildValidatedPointsLookup(votes, submissions);
 
   return submissions.map(sub => {
     const key = `${sub.spotifyUri}_${sub.roundId}`;
