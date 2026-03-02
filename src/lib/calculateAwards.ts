@@ -35,6 +35,10 @@ export function calculateAwards(): Award[] {
     submissionLookup.set(key, s.submitterId);
   });
 
+  // Music League rule: if you don't vote in a round, you forfeit points earned that round
+  const votedInRound = new Set<string>();
+  votes.forEach(v => votedInRound.add(`${v.voterId}_${v.roundId}`));
+
   const awards: Award[] = [];
 
   // Helper to create rankings from a map
@@ -60,7 +64,8 @@ export function calculateAwards(): Award[] {
   votes.forEach(vote => {
     const key = `${vote.spotifyUri}_${vote.roundId}`;
     const submitterId = submissionLookup.get(key);
-    if (submitterId) {
+    const didVote = submitterId && votedInRound.has(`${submitterId}_${vote.roundId}`);
+    if (submitterId && (didVote || vote.points < 0)) {
       totalPointsPerCompetitor.set(submitterId, (totalPointsPerCompetitor.get(submitterId) || 0) + vote.points);
     }
   });
@@ -102,12 +107,13 @@ export function calculateAwards(): Award[] {
   });
 
   // 3. The Octopus - Person who got the most 8's
+  // 8s are always positive so they're forfeited if submitter didn't vote
   const eightsReceived = new Map<string, number>();
   competitors.forEach(c => eightsReceived.set(c.id, 0));
   votes.filter(v => v.points === 8).forEach(vote => {
     const key = `${vote.spotifyUri}_${vote.roundId}`;
     const submitterId = submissionLookup.get(key);
-    if (submitterId) {
+    if (submitterId && votedInRound.has(`${submitterId}_${vote.roundId}`)) {
       eightsReceived.set(submitterId, (eightsReceived.get(submitterId) || 0) + 1);
     }
   });
@@ -168,7 +174,7 @@ export function calculateAwards(): Award[] {
     sortOrder: 'desc'
   });
 
-  // 6. Public Enemy - Person who got the most downvotes
+  // 6. Public Enemy - Person who got the most downvotes (negatives always count)
   const downvotesReceived = new Map<string, number>();
   competitors.forEach(c => downvotesReceived.set(c.id, 0));
   votes.filter(v => v.points < 0).forEach(vote => {
@@ -292,13 +298,15 @@ export function calculateAwards(): Award[] {
   const worstEnemies = [...pairPoints.entries()].sort((a, b) => a[1] - b[1])[0];
   const enemyIds = worstEnemies ? worstEnemies[0].split('_') : [];
   
-  // For enemies, show points received from others (lower is "worse")
+  // For enemies, show points received from others — negatives always count, positives only if submitter voted
   const pointsReceivedFromOthers = new Map<string, number>();
   competitors.forEach(c => pointsReceivedFromOthers.set(c.id, 0));
   votes.forEach(vote => {
     const key = `${vote.spotifyUri}_${vote.roundId}`;
     const submitterId = submissionLookup.get(key);
-    if (submitterId && submitterId !== vote.voterId) {
+    if (!submitterId || submitterId === vote.voterId) return;
+    const didVote = votedInRound.has(`${submitterId}_${vote.roundId}`);
+    if (didVote || vote.points < 0) {
       pointsReceivedFromOthers.set(submitterId, (pointsReceivedFromOthers.get(submitterId) || 0) + vote.points);
     }
   });
