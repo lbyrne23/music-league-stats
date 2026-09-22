@@ -1,0 +1,1688 @@
+{
+  "_about": "Artist genre tags, strongest first. source: 'lastfm' or 'musicbrainz' = fetched by `npm run genres`, 'seed' = hand-written starter tags (replaced when the script finds real ones), 'manual' = yours, never overwritten. Add a manual entry to fix any artist the script gets wrong.",
+  "artists": {
+    "A Tribe Called Quest": {
+      "tags": [
+        "hip-hop",
+        "jazz rap"
+      ],
+      "source": "seed"
+    },
+    "ABBA": {
+      "tags": [
+        "pop",
+        "disco",
+        "70s"
+      ],
+      "source": "seed"
+    },
+    "Aeroplane": {
+      "tags": [
+        "nu disco",
+        "electronic",
+        "house"
+      ],
+      "source": "seed"
+    },
+    "Akron/Family": {
+      "tags": [
+        "experimental",
+        "psychedelic folk",
+        "indie"
+      ],
+      "source": "seed"
+    },
+    "Alex Kassian": {
+      "tags": [
+        "balearic",
+        "nu disco"
+      ],
+      "source": "seed"
+    },
+    "Alice In Chains": {
+      "tags": [
+        "grunge",
+        "rock",
+        "alternative metal"
+      ],
+      "source": "seed"
+    },
+    "AlunaGeorge": {
+      "tags": [
+        "electropop",
+        "uk garage",
+        "future garage"
+      ],
+      "source": "seed"
+    },
+    "Aly & AJ": {
+      "tags": [
+        "pop",
+        "pop rock"
+      ],
+      "source": "seed"
+    },
+    "Andrea Bocelli": {
+      "tags": [
+        "classical",
+        "opera",
+        "tenor"
+      ],
+      "source": "seed"
+    },
+    "Angine de Poitrine": {
+      "tags": [
+        "math rock",
+        "experimental rock"
+      ],
+      "source": "seed"
+    },
+    "Arctic Monkeys": {
+      "tags": [
+        "indie rock",
+        "rock",
+        "garage rock"
+      ],
+      "source": "seed"
+    },
+    "AURORA": {
+      "tags": [
+        "electropop",
+        "art pop",
+        "indie pop"
+      ],
+      "source": "seed"
+    },
+    "awfultune": {
+      "tags": [
+        "indie pop",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "Axwell": {
+      "tags": [
+        "house",
+        "electro house",
+        "progressive house"
+      ],
+      "source": "seed"
+    },
+    "Baba Commandant & The Mandingo Band": {
+      "tags": [
+        "afrobeat",
+        "world",
+        "burkina faso"
+      ],
+      "source": "seed"
+    },
+    "BADBADNOTGOOD": {
+      "tags": [
+        "jazz",
+        "jazz fusion",
+        "hip-hop"
+      ],
+      "source": "seed"
+    },
+    "Basement Jaxx": {
+      "tags": [
+        "house",
+        "electronic",
+        "big beat"
+      ],
+      "source": "seed"
+    },
+    "Bastille": {
+      "tags": [
+        "indie pop",
+        "synth-pop",
+        "alternative"
+      ],
+      "source": "seed"
+    },
+    "Beck": {
+      "tags": [
+        "alternative",
+        "indie",
+        "lo-fi"
+      ],
+      "source": "seed"
+    },
+    "BICEP": {
+      "tags": [
+        "electronic",
+        "house",
+        "breakbeat"
+      ],
+      "source": "seed"
+    },
+    "Bill Lee": {
+      "tags": [
+        "jazz",
+        "soundtrack"
+      ],
+      "source": "seed"
+    },
+    "Billy Bragg": {
+      "tags": [
+        "folk",
+        "singer-songwriter",
+        "protest"
+      ],
+      "source": "seed"
+    },
+    "Billy Joel": {
+      "tags": [
+        "pop rock",
+        "piano rock",
+        "70s"
+      ],
+      "source": "seed"
+    },
+    "Binary Finary": {
+      "tags": [
+        "trance",
+        "uplifting trance"
+      ],
+      "source": "seed"
+    },
+    "Black Eyed Peas": {
+      "tags": [
+        "hip-hop",
+        "pop",
+        "dance pop"
+      ],
+      "source": "seed"
+    },
+    "Black Sabbath": {
+      "tags": [
+        "heavy metal",
+        "hard rock",
+        "doom metal"
+      ],
+      "source": "seed"
+    },
+    "Blanco": {
+      "tags": [
+        "pop",
+        "italian pop",
+        "urban"
+      ],
+      "source": "seed"
+    },
+    "Bleachers": {
+      "tags": [
+        "indie pop",
+        "synth-pop",
+        "alternative"
+      ],
+      "source": "seed"
+    },
+    "Boards of Canada": {
+      "tags": [
+        "idm",
+        "ambient",
+        "electronic"
+      ],
+      "source": "seed"
+    },
+    "Bob Dylan": {
+      "tags": [
+        "folk",
+        "folk rock",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "Boney M.": {
+      "tags": [
+        "disco",
+        "eurodisco",
+        "70s"
+      ],
+      "source": "seed"
+    },
+    "Bootie Brown": {
+      "tags": [
+        "hip-hop"
+      ],
+      "source": "seed"
+    },
+    "Bran Van 3000": {
+      "tags": [
+        "alternative",
+        "trip-hop",
+        "90s"
+      ],
+      "source": "seed"
+    },
+    "Brian Eno": {
+      "tags": [
+        "ambient",
+        "electronic",
+        "experimental"
+      ],
+      "source": "seed"
+    },
+    "Britney Spears": {
+      "tags": [
+        "pop",
+        "dance pop"
+      ],
+      "source": "seed"
+    },
+    "Bruce Springsteen": {
+      "tags": [
+        "rock",
+        "heartland rock",
+        "classic rock"
+      ],
+      "source": "seed"
+    },
+    "Brògeal": {
+      "tags": [
+        "folk punk",
+        "celtic punk",
+        "indie"
+      ],
+      "source": "seed"
+    },
+    "Buena Vista Social Club": {
+      "tags": [
+        "cuban",
+        "son cubano",
+        "latin",
+        "world"
+      ],
+      "source": "seed"
+    },
+    "Bullion": {
+      "tags": [
+        "electronic",
+        "indie pop",
+        "balearic"
+      ],
+      "source": "seed"
+    },
+    "Caravan Palace": {
+      "tags": [
+        "electro swing",
+        "electronic",
+        "jazz"
+      ],
+      "source": "seed"
+    },
+    "Caroline Polachek": {
+      "tags": [
+        "art pop",
+        "indie pop",
+        "electropop"
+      ],
+      "source": "seed"
+    },
+    "Cascada": {
+      "tags": [
+        "eurodance",
+        "dance",
+        "trance"
+      ],
+      "source": "seed"
+    },
+    "Celso Valli": {
+      "tags": [
+        "italo disco",
+        "disco"
+      ],
+      "source": "seed"
+    },
+    "Chappell Roan": {
+      "tags": [
+        "pop",
+        "synth-pop",
+        "indie pop"
+      ],
+      "source": "seed"
+    },
+    "Charmian Carr": {
+      "tags": [
+        "soundtrack",
+        "musical",
+        "show tunes"
+      ],
+      "source": "seed"
+    },
+    "Chet Faker": {
+      "tags": [
+        "electronic",
+        "downtempo",
+        "soul"
+      ],
+      "source": "seed"
+    },
+    "CHVRCHES": {
+      "tags": [
+        "synth-pop",
+        "electropop",
+        "indie"
+      ],
+      "source": "seed"
+    },
+    "Creed": {
+      "tags": [
+        "post-grunge",
+        "rock",
+        "alternative rock"
+      ],
+      "source": "seed"
+    },
+    "Dana Lyons": {
+      "tags": [
+        "folk",
+        "comedy",
+        "novelty"
+      ],
+      "source": "seed"
+    },
+    "Daniel Deluxe": {
+      "tags": [
+        "synthwave",
+        "darksynth",
+        "electronic"
+      ],
+      "source": "seed"
+    },
+    "David Glen Eisley": {
+      "tags": [
+        "rock",
+        "aor"
+      ],
+      "source": "seed"
+    },
+    "David Gray": {
+      "tags": [
+        "singer-songwriter",
+        "folk rock",
+        "acoustic"
+      ],
+      "source": "seed"
+    },
+    "Diana Gordon": {
+      "tags": [
+        "r&b",
+        "pop"
+      ],
+      "source": "seed"
+    },
+    "Disclosure": {
+      "tags": [
+        "house",
+        "uk garage",
+        "electronic"
+      ],
+      "source": "seed"
+    },
+    "DJ Assault": {
+      "tags": [
+        "ghettotech",
+        "electro",
+        "detroit techno"
+      ],
+      "source": "seed"
+    },
+    "DJ Patife": {
+      "tags": [
+        "drum and bass",
+        "liquid funk"
+      ],
+      "source": "seed"
+    },
+    "DJ Ötzi": {
+      "tags": [
+        "schlager",
+        "party",
+        "pop"
+      ],
+      "source": "seed"
+    },
+    "Doja Cat": {
+      "tags": [
+        "pop",
+        "hip-hop",
+        "r&b"
+      ],
+      "source": "seed"
+    },
+    "Duke Dumont": {
+      "tags": [
+        "house",
+        "deep house",
+        "electronic"
+      ],
+      "source": "seed"
+    },
+    "East Forest": {
+      "tags": [
+        "ambient",
+        "new age",
+        "meditation"
+      ],
+      "source": "seed"
+    },
+    "Eddie Vedder": {
+      "tags": [
+        "rock",
+        "singer-songwriter",
+        "alternative rock"
+      ],
+      "source": "seed"
+    },
+    "Ennio Morricone": {
+      "tags": [
+        "soundtrack",
+        "film score",
+        "classical"
+      ],
+      "source": "seed"
+    },
+    "Enya": {
+      "tags": [
+        "new age",
+        "celtic",
+        "ambient"
+      ],
+      "source": "seed"
+    },
+    "Example": {
+      "tags": [
+        "electronic",
+        "dance",
+        "uk hip-hop"
+      ],
+      "source": "seed"
+    },
+    "Fay Wildhagen": {
+      "tags": [
+        "indie folk",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "FIDLAR": {
+      "tags": [
+        "punk",
+        "garage punk",
+        "skate punk"
+      ],
+      "source": "seed"
+    },
+    "Fleetwood Mac": {
+      "tags": [
+        "classic rock",
+        "soft rock",
+        "70s"
+      ],
+      "source": "seed"
+    },
+    "Floating Points": {
+      "tags": [
+        "electronic",
+        "house",
+        "jazz"
+      ],
+      "source": "seed"
+    },
+    "Flume": {
+      "tags": [
+        "future bass",
+        "electronic",
+        "experimental"
+      ],
+      "source": "seed"
+    },
+    "Foals": {
+      "tags": [
+        "indie rock",
+        "math rock",
+        "alternative"
+      ],
+      "source": "seed"
+    },
+    "For Those I Love": {
+      "tags": [
+        "electronic",
+        "spoken word",
+        "irish"
+      ],
+      "source": "seed"
+    },
+    "Foreigner": {
+      "tags": [
+        "classic rock",
+        "aor",
+        "hard rock"
+      ],
+      "source": "seed"
+    },
+    "Fred again..": {
+      "tags": [
+        "electronic",
+        "house",
+        "uk garage"
+      ],
+      "source": "seed"
+    },
+    "Friendly Fires": {
+      "tags": [
+        "indie dance",
+        "dance-punk",
+        "indie"
+      ],
+      "source": "seed"
+    },
+    "Future Breeze": {
+      "tags": [
+        "trance",
+        "dance",
+        "eurodance"
+      ],
+      "source": "seed"
+    },
+    "George Michael": {
+      "tags": [
+        "pop",
+        "soul",
+        "80s"
+      ],
+      "source": "seed"
+    },
+    "Getdown Services": {
+      "tags": [
+        "post-punk",
+        "indie",
+        "dance-punk"
+      ],
+      "source": "seed"
+    },
+    "Go_A": {
+      "tags": [
+        "electronic",
+        "folk",
+        "ukrainian"
+      ],
+      "source": "seed"
+    },
+    "Gorillaz": {
+      "tags": [
+        "alternative",
+        "electronic",
+        "hip-hop"
+      ],
+      "source": "seed"
+    },
+    "Gregory Alan Isakov": {
+      "tags": [
+        "indie folk",
+        "folk",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "Gurriers": {
+      "tags": [
+        "post-punk",
+        "punk",
+        "noise rock"
+      ],
+      "source": "seed"
+    },
+    "HAIM": {
+      "tags": [
+        "indie pop",
+        "pop rock",
+        "soft rock"
+      ],
+      "source": "seed"
+    },
+    "Hard-Fi": {
+      "tags": [
+        "indie rock",
+        "britpop",
+        "post-punk revival"
+      ],
+      "source": "seed"
+    },
+    "Her's": {
+      "tags": [
+        "indie pop",
+        "jangle pop",
+        "dream pop"
+      ],
+      "source": "seed"
+    },
+    "Hiroshi Yoshimura": {
+      "tags": [
+        "ambient",
+        "kankyō ongaku",
+        "japanese"
+      ],
+      "source": "seed"
+    },
+    "Hozier": {
+      "tags": [
+        "indie folk",
+        "soul",
+        "blues rock"
+      ],
+      "source": "seed"
+    },
+    "Hudson Mohawke": {
+      "tags": [
+        "electronic",
+        "trap",
+        "wonky"
+      ],
+      "source": "seed"
+    },
+    "Ice Spice": {
+      "tags": [
+        "hip-hop",
+        "drill",
+        "rap"
+      ],
+      "source": "seed"
+    },
+    "James": {
+      "tags": [
+        "indie",
+        "britpop",
+        "alternative rock"
+      ],
+      "source": "seed"
+    },
+    "James Blake": {
+      "tags": [
+        "electronic",
+        "post-dubstep",
+        "soul"
+      ],
+      "source": "seed"
+    },
+    "James Blunt": {
+      "tags": [
+        "pop",
+        "singer-songwriter",
+        "soft rock"
+      ],
+      "source": "seed"
+    },
+    "James Horner": {
+      "tags": [
+        "soundtrack",
+        "film score",
+        "orchestral"
+      ],
+      "source": "seed"
+    },
+    "james K": {
+      "tags": [
+        "experimental",
+        "ambient",
+        "electronic"
+      ],
+      "source": "seed"
+    },
+    "Jimi Hendrix": {
+      "tags": [
+        "psychedelic rock",
+        "blues rock",
+        "classic rock"
+      ],
+      "source": "seed"
+    },
+    "Joan Jett & the Blackhearts": {
+      "tags": [
+        "rock",
+        "hard rock",
+        "punk rock"
+      ],
+      "source": "seed"
+    },
+    "Johnny Nash": {
+      "tags": [
+        "reggae",
+        "soul",
+        "70s"
+      ],
+      "source": "seed"
+    },
+    "Jon Hopkins": {
+      "tags": [
+        "electronic",
+        "ambient",
+        "idm"
+      ],
+      "source": "seed"
+    },
+    "José González": {
+      "tags": [
+        "indie folk",
+        "singer-songwriter",
+        "acoustic"
+      ],
+      "source": "seed"
+    },
+    "Joy Division": {
+      "tags": [
+        "post-punk",
+        "new wave",
+        "gothic rock"
+      ],
+      "source": "seed"
+    },
+    "Justice": {
+      "tags": [
+        "electro",
+        "french house",
+        "electronic"
+      ],
+      "source": "seed"
+    },
+    "Justin Bieber": {
+      "tags": [
+        "pop",
+        "dance pop",
+        "r&b"
+      ],
+      "source": "seed"
+    },
+    "Kacey Musgraves": {
+      "tags": [
+        "country",
+        "pop",
+        "americana"
+      ],
+      "source": "seed"
+    },
+    "Kasabian": {
+      "tags": [
+        "indie rock",
+        "rock",
+        "britpop"
+      ],
+      "source": "seed"
+    },
+    "Kate Nash": {
+      "tags": [
+        "indie pop",
+        "singer-songwriter",
+        "anti-folk"
+      ],
+      "source": "seed"
+    },
+    "Kelly Lee Owens": {
+      "tags": [
+        "electronic",
+        "techno",
+        "ambient"
+      ],
+      "source": "seed"
+    },
+    "KETTAMA": {
+      "tags": [
+        "house",
+        "uk garage",
+        "electronic"
+      ],
+      "source": "seed"
+    },
+    "Khruangbin": {
+      "tags": [
+        "psychedelic",
+        "funk",
+        "surf rock"
+      ],
+      "source": "seed"
+    },
+    "King Creosote": {
+      "tags": [
+        "indie folk",
+        "folk",
+        "scottish"
+      ],
+      "source": "seed"
+    },
+    "Laraaji": {
+      "tags": [
+        "ambient",
+        "new age"
+      ],
+      "source": "seed"
+    },
+    "LCD Soundsystem": {
+      "tags": [
+        "dance-punk",
+        "electronic",
+        "indie"
+      ],
+      "source": "seed"
+    },
+    "Led Zeppelin": {
+      "tags": [
+        "classic rock",
+        "hard rock",
+        "blues rock"
+      ],
+      "source": "seed"
+    },
+    "Leif Vollebekk": {
+      "tags": [
+        "singer-songwriter",
+        "folk",
+        "indie folk"
+      ],
+      "source": "seed"
+    },
+    "Lily Allen": {
+      "tags": [
+        "pop",
+        "indie pop",
+        "british"
+      ],
+      "source": "seed"
+    },
+    "Lizzy McAlpine": {
+      "tags": [
+        "singer-songwriter",
+        "indie folk",
+        "indie pop"
+      ],
+      "source": "seed"
+    },
+    "London Metropolitan Orchestra": {
+      "tags": [
+        "soundtrack",
+        "orchestral",
+        "classical"
+      ],
+      "source": "seed"
+    },
+    "Lorde": {
+      "tags": [
+        "art pop",
+        "electropop",
+        "indie pop"
+      ],
+      "source": "seed"
+    },
+    "Lynyrd Skynyrd": {
+      "tags": [
+        "southern rock",
+        "classic rock",
+        "70s"
+      ],
+      "source": "seed"
+    },
+    "M83": {
+      "tags": [
+        "shoegaze",
+        "synth-pop",
+        "dream pop"
+      ],
+      "source": "seed"
+    },
+    "Mac DeMarco": {
+      "tags": [
+        "indie rock",
+        "lo-fi",
+        "jangle pop"
+      ],
+      "source": "seed"
+    },
+    "Madness": {
+      "tags": [
+        "ska",
+        "2 tone",
+        "new wave"
+      ],
+      "source": "seed"
+    },
+    "Maroon 5": {
+      "tags": [
+        "pop",
+        "pop rock"
+      ],
+      "source": "seed"
+    },
+    "Mason": {
+      "tags": [
+        "electro house",
+        "house"
+      ],
+      "source": "seed"
+    },
+    "Messer Fur Frau Muller": {
+      "tags": [
+        "experimental",
+        "electronic"
+      ],
+      "source": "seed"
+    },
+    "Miley Cyrus": {
+      "tags": [
+        "pop",
+        "pop rock"
+      ],
+      "source": "seed"
+    },
+    "Moby": {
+      "tags": [
+        "electronic",
+        "downtempo",
+        "ambient"
+      ],
+      "source": "seed"
+    },
+    "Mogwai": {
+      "tags": [
+        "post-rock",
+        "instrumental",
+        "scottish"
+      ],
+      "source": "seed"
+    },
+    "Monica Martin": {
+      "tags": [
+        "folk",
+        "americana",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "Moondog": {
+      "tags": [
+        "experimental",
+        "avant-garde",
+        "jazz"
+      ],
+      "source": "seed"
+    },
+    "Muse": {
+      "tags": [
+        "alternative rock",
+        "rock",
+        "progressive rock"
+      ],
+      "source": "seed"
+    },
+    "Nick Drake": {
+      "tags": [
+        "folk",
+        "singer-songwriter",
+        "acoustic"
+      ],
+      "source": "seed"
+    },
+    "Nico": {
+      "tags": [
+        "art rock",
+        "folk",
+        "experimental"
+      ],
+      "source": "seed"
+    },
+    "Noah Kahan": {
+      "tags": [
+        "folk pop",
+        "indie folk",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "Novo Amor": {
+      "tags": [
+        "indie folk",
+        "ambient",
+        "chamber pop"
+      ],
+      "source": "seed"
+    },
+    "Olivia Newton-John": {
+      "tags": [
+        "pop",
+        "soundtrack",
+        "70s"
+      ],
+      "source": "seed"
+    },
+    "Outkast": {
+      "tags": [
+        "hip-hop",
+        "southern hip-hop",
+        "funk"
+      ],
+      "source": "seed"
+    },
+    "Owl City": {
+      "tags": [
+        "electropop",
+        "synth-pop",
+        "indie pop"
+      ],
+      "source": "seed"
+    },
+    "Pantera": {
+      "tags": [
+        "groove metal",
+        "heavy metal",
+        "thrash metal"
+      ],
+      "source": "seed"
+    },
+    "Patea Maori Club": {
+      "tags": [
+        "world",
+        "maori",
+        "pop"
+      ],
+      "source": "seed"
+    },
+    "Paul Brady": {
+      "tags": [
+        "irish folk",
+        "folk",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "Paul McCartney": {
+      "tags": [
+        "rock",
+        "pop rock",
+        "classic rock"
+      ],
+      "source": "seed"
+    },
+    "Paul Oakenfold": {
+      "tags": [
+        "trance",
+        "electronic",
+        "dance"
+      ],
+      "source": "seed"
+    },
+    "Paul Simon": {
+      "tags": [
+        "folk rock",
+        "singer-songwriter",
+        "world"
+      ],
+      "source": "seed"
+    },
+    "Petey Pablo": {
+      "tags": [
+        "hip-hop",
+        "crunk",
+        "southern hip-hop"
+      ],
+      "source": "seed"
+    },
+    "Pharrell Williams": {
+      "tags": [
+        "pop",
+        "hip-hop",
+        "funk"
+      ],
+      "source": "seed"
+    },
+    "Phoebe Bridgers": {
+      "tags": [
+        "indie folk",
+        "indie rock",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "Phoenix": {
+      "tags": [
+        "indie pop",
+        "indie rock",
+        "synth-pop"
+      ],
+      "source": "seed"
+    },
+    "Photay": {
+      "tags": [
+        "electronic",
+        "experimental",
+        "ambient"
+      ],
+      "source": "seed"
+    },
+    "Pinkshinyultrablast": {
+      "tags": [
+        "shoegaze",
+        "dream pop",
+        "noise pop"
+      ],
+      "source": "seed"
+    },
+    "Planxty": {
+      "tags": [
+        "irish folk",
+        "celtic",
+        "traditional"
+      ],
+      "source": "seed"
+    },
+    "Princess Nokia": {
+      "tags": [
+        "hip-hop",
+        "rap"
+      ],
+      "source": "seed"
+    },
+    "Princess Superstar": {
+      "tags": [
+        "electroclash",
+        "hip-hop",
+        "electronic"
+      ],
+      "source": "seed"
+    },
+    "Pulp": {
+      "tags": [
+        "britpop",
+        "indie rock",
+        "alternative"
+      ],
+      "source": "seed"
+    },
+    "Purple Disco Machine": {
+      "tags": [
+        "nu disco",
+        "house",
+        "disco"
+      ],
+      "source": "seed"
+    },
+    "Queens of the Stone Age": {
+      "tags": [
+        "stoner rock",
+        "hard rock",
+        "alternative rock"
+      ],
+      "source": "seed"
+    },
+    "Radical Face": {
+      "tags": [
+        "indie folk",
+        "folk",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "Rage Against The Machine": {
+      "tags": [
+        "rap metal",
+        "alternative metal",
+        "rock"
+      ],
+      "source": "seed"
+    },
+    "Ram Dass": {
+      "tags": [
+        "spoken word"
+      ],
+      "source": "seed"
+    },
+    "Remember Sports": {
+      "tags": [
+        "indie rock",
+        "power pop",
+        "indie punk"
+      ],
+      "source": "seed"
+    },
+    "Ricky Martin": {
+      "tags": [
+        "latin pop",
+        "pop",
+        "dance pop"
+      ],
+      "source": "seed"
+    },
+    "Roy Ayers Ubiquity": {
+      "tags": [
+        "jazz funk",
+        "soul",
+        "funk"
+      ],
+      "source": "seed"
+    },
+    "ROZES": {
+      "tags": [
+        "electropop",
+        "pop"
+      ],
+      "source": "seed"
+    },
+    "Salt-N-Pepa": {
+      "tags": [
+        "hip-hop",
+        "old school hip-hop"
+      ],
+      "source": "seed"
+    },
+    "Sam Fender": {
+      "tags": [
+        "indie rock",
+        "heartland rock",
+        "rock"
+      ],
+      "source": "seed"
+    },
+    "Samuel T. Herring": {
+      "tags": [
+        "synth-pop",
+        "indie"
+      ],
+      "source": "seed"
+    },
+    "Sarah Kinsley": {
+      "tags": [
+        "indie pop",
+        "art pop"
+      ],
+      "source": "seed"
+    },
+    "Sash!": {
+      "tags": [
+        "eurodance",
+        "trance",
+        "dance"
+      ],
+      "source": "seed"
+    },
+    "Say She She": {
+      "tags": [
+        "disco",
+        "soul",
+        "funk"
+      ],
+      "source": "seed"
+    },
+    "Seal": {
+      "tags": [
+        "soul",
+        "pop",
+        "r&b"
+      ],
+      "source": "seed"
+    },
+    "Sharon Shannon": {
+      "tags": [
+        "irish folk",
+        "celtic",
+        "traditional"
+      ],
+      "source": "seed"
+    },
+    "Sharon Van Etten": {
+      "tags": [
+        "indie rock",
+        "singer-songwriter",
+        "indie folk"
+      ],
+      "source": "seed"
+    },
+    "Slayyyter": {
+      "tags": [
+        "hyperpop",
+        "electropop",
+        "pop"
+      ],
+      "source": "seed"
+    },
+    "Slipknot": {
+      "tags": [
+        "nu metal",
+        "heavy metal",
+        "alternative metal"
+      ],
+      "source": "seed"
+    },
+    "Snoop Dogg": {
+      "tags": [
+        "hip-hop",
+        "west coast rap",
+        "g-funk"
+      ],
+      "source": "seed"
+    },
+    "Sophie Ellis-Bextor": {
+      "tags": [
+        "pop",
+        "dance pop",
+        "disco"
+      ],
+      "source": "seed"
+    },
+    "SPRINTS": {
+      "tags": [
+        "post-punk",
+        "punk",
+        "noise rock"
+      ],
+      "source": "seed"
+    },
+    "Steve Angello": {
+      "tags": [
+        "house",
+        "progressive house",
+        "electro house"
+      ],
+      "source": "seed"
+    },
+    "Sufjan Stevens": {
+      "tags": [
+        "indie folk",
+        "singer-songwriter",
+        "chamber pop"
+      ],
+      "source": "seed"
+    },
+    "Sum 41": {
+      "tags": [
+        "pop punk",
+        "punk rock",
+        "alternative rock"
+      ],
+      "source": "seed"
+    },
+    "Supermode": {
+      "tags": [
+        "house",
+        "electro house"
+      ],
+      "source": "seed"
+    },
+    "SZA": {
+      "tags": [
+        "r&b",
+        "neo-soul",
+        "alternative r&b"
+      ],
+      "source": "seed"
+    },
+    "Tabu Ley Rochereau": {
+      "tags": [
+        "soukous",
+        "rumba",
+        "world",
+        "african"
+      ],
+      "source": "seed"
+    },
+    "Talking Heads": {
+      "tags": [
+        "new wave",
+        "post-punk",
+        "art rock"
+      ],
+      "source": "seed"
+    },
+    "Tame Impala": {
+      "tags": [
+        "psychedelic rock",
+        "psychedelic pop",
+        "indie"
+      ],
+      "source": "seed"
+    },
+    "Taylor Swift": {
+      "tags": [
+        "pop",
+        "country",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "TEED": {
+      "tags": [
+        "electronic",
+        "electropop",
+        "dance"
+      ],
+      "source": "seed"
+    },
+    "The Beatles": {
+      "tags": [
+        "classic rock",
+        "rock",
+        "pop"
+      ],
+      "source": "seed"
+    },
+    "The Chainsmokers": {
+      "tags": [
+        "edm",
+        "electropop",
+        "pop"
+      ],
+      "source": "seed"
+    },
+    "The Cinematic Orchestra": {
+      "tags": [
+        "downtempo",
+        "nu jazz",
+        "trip-hop"
+      ],
+      "source": "seed"
+    },
+    "The Dare": {
+      "tags": [
+        "electroclash",
+        "indie sleaze",
+        "dance-punk"
+      ],
+      "source": "seed"
+    },
+    "The Flaming Lips": {
+      "tags": [
+        "psychedelic rock",
+        "alternative",
+        "neo-psychedelia"
+      ],
+      "source": "seed"
+    },
+    "The Four Seasons": {
+      "tags": [
+        "doo-wop",
+        "pop",
+        "60s"
+      ],
+      "source": "seed"
+    },
+    "The Free Design": {
+      "tags": [
+        "sunshine pop",
+        "baroque pop",
+        "60s"
+      ],
+      "source": "seed"
+    },
+    "The Gap Band": {
+      "tags": [
+        "funk",
+        "r&b",
+        "soul"
+      ],
+      "source": "seed"
+    },
+    "The Lumineers": {
+      "tags": [
+        "indie folk",
+        "folk rock",
+        "americana"
+      ],
+      "source": "seed"
+    },
+    "The Palestrina Choir": {
+      "tags": [
+        "choral",
+        "classical",
+        "sacred"
+      ],
+      "source": "seed"
+    },
+    "The Pogues": {
+      "tags": [
+        "celtic punk",
+        "folk punk",
+        "irish folk"
+      ],
+      "source": "seed"
+    },
+    "The Roches": {
+      "tags": [
+        "folk",
+        "singer-songwriter"
+      ],
+      "source": "seed"
+    },
+    "The Scratch": {
+      "tags": [
+        "irish folk",
+        "folk metal",
+        "trad"
+      ],
+      "source": "seed"
+    },
+    "The Smashing Pumpkins": {
+      "tags": [
+        "alternative rock",
+        "grunge",
+        "rock"
+      ],
+      "source": "seed"
+    },
+    "The Smiths": {
+      "tags": [
+        "indie",
+        "post-punk",
+        "jangle pop"
+      ],
+      "source": "seed"
+    },
+    "The Stranglers": {
+      "tags": [
+        "punk rock",
+        "new wave",
+        "post-punk"
+      ],
+      "source": "seed"
+    },
+    "The Strokes": {
+      "tags": [
+        "indie rock",
+        "garage rock revival",
+        "rock"
+      ],
+      "source": "seed"
+    },
+    "The The": {
+      "tags": [
+        "new wave",
+        "post-punk",
+        "synth-pop"
+      ],
+      "source": "seed"
+    },
+    "The Vaccines": {
+      "tags": [
+        "indie rock",
+        "garage rock"
+      ],
+      "source": "seed"
+    },
+    "The Voidz": {
+      "tags": [
+        "experimental rock",
+        "alternative"
+      ],
+      "source": "seed"
+    },
+    "The White Stripes": {
+      "tags": [
+        "garage rock",
+        "alternative rock",
+        "blues rock"
+      ],
+      "source": "seed"
+    },
+    "The xx": {
+      "tags": [
+        "indie pop",
+        "dream pop",
+        "minimal"
+      ],
+      "source": "seed"
+    },
+    "Underworld": {
+      "tags": [
+        "electronic",
+        "techno",
+        "big beat"
+      ],
+      "source": "seed"
+    },
+    "War": {
+      "tags": [
+        "funk",
+        "soul",
+        "latin rock"
+      ],
+      "source": "seed"
+    },
+    "Ween": {
+      "tags": [
+        "alternative rock",
+        "experimental",
+        "psychedelic"
+      ],
+      "source": "seed"
+    },
+    "Wilco": {
+      "tags": [
+        "alternative country",
+        "indie rock",
+        "americana"
+      ],
+      "source": "seed"
+    },
+    "Wings": {
+      "tags": [
+        "classic rock",
+        "soft rock",
+        "70s"
+      ],
+      "source": "seed"
+    },
+    "Yo La Tengo": {
+      "tags": [
+        "indie rock",
+        "dream pop",
+        "noise pop"
+      ],
+      "source": "seed"
+    },
+    "Yves Tumor": {
+      "tags": [
+        "experimental",
+        "art pop",
+        "glam rock"
+      ],
+      "source": "seed"
+    }
+  }
+}

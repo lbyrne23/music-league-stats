@@ -3,6 +3,7 @@ import competitorsRaw from '@/data/competitors.csv?raw';
 import roundsRaw from '@/data/rounds.csv?raw';
 import submissionsRaw from '@/data/submissions.csv?raw';
 import votesRaw from '@/data/votes.csv?raw';
+import displayNames from '@/data/displayNames.json';
 
 export interface Competitor {
   id: string;
@@ -101,10 +102,11 @@ function parseCSVMultiline(csv: string): string[][] {
 
 export function getCompetitors(): Competitor[] {
   const rows = parseCSVMultiline(competitorsRaw);
-  return rows.slice(1).map(row => ({
-    id: row[0] || '',
-    name: row[1] || '',
-  }));
+  const overrides = (displayNames as { names: Record<string, string> }).names;
+  return rows.slice(1).map(row => {
+    const id = row[0] || '';
+    return { id, name: overrides[id] || (row[1] || '').trim() };
+  });
 }
 
 export function getRounds(): Round[] {
@@ -265,7 +267,10 @@ export function getRoundResults(): RoundResult[] {
       submissionByUri.set(s.spotifyUri, s);
     });
     
+    // Everyone who submitted gets a row, so a forfeit shows up as a low finish
+    // instead of the player silently vanishing from the round
     const pointsBySubmitter = new Map<string, number>();
+    roundSubmissions.forEach(s => pointsBySubmitter.set(s.submitterId, 0));
 
     // Who voted in this round?
     const votersThisRound = new Set(roundVotes.map(v => v.voterId));

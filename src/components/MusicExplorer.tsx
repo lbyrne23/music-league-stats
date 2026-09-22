@@ -118,6 +118,9 @@ const MusicExplorer = () => {
                 <div className="space-y-2 mb-4">
                   <p className="text-xs text-muted-foreground uppercase tracking-wider">Submits</p>
                   <div className="space-y-1.5">
+                    {profile.genreBreakdown.length === 0 && (
+                      <p className="text-xs text-muted-foreground">No genres yet</p>
+                    )}
                     {profile.genreBreakdown.slice(0, 4).map(({ genre, percentage }) => (
                       <div key={genre} className="flex items-center gap-2">
                         <div className="flex-1">
@@ -130,6 +133,11 @@ const MusicExplorer = () => {
                       </div>
                     ))}
                   </div>
+                  {profile.unclassifiedCount > 0 && (
+                    <p className="text-[11px] text-muted-foreground">
+                      +{profile.unclassifiedCount} unclassified {profile.unclassifiedCount === 1 ? 'track' : 'tracks'}
+                    </p>
+                  )}
                 </div>
 
                 {/* Voting Preferences */}
@@ -273,7 +281,7 @@ const MusicExplorer = () => {
         </TabsContent>
 
         {/* Genres Tab */}
-        <TabsContent value="genres" className="p-5">
+        <TabsContent value="genres" className="p-5 space-y-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {genreStats.slice(0, 18).map((genre, index) => (
               <div 
@@ -304,6 +312,11 @@ const MusicExplorer = () => {
               </div>
             ))}
           </div>
+          {musicStats.unclassifiedTracks > 0 && (
+            <p className="text-xs text-muted-foreground">
+              {musicStats.unclassifiedTracks} {musicStats.unclassifiedTracks === 1 ? 'track' : 'tracks'} unclassified and left out of these numbers.
+            </p>
+          )}
         </TabsContent>
       </Tabs>
     </div>

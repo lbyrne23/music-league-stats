@@ -1,9 +1,17 @@
-import { getCompetitors, getSubmissions, getVotes, getRounds, getRoundResults, Competitor, Submission, Vote } from './parseData';
+import { getCompetitors, getSubmissions, getVotes, getRoundResults, Competitor, Submission, Vote } from './parseData';
 
 export interface AwardRanking {
   competitor: Competitor;
   value: number;
   formattedValue: string;
+}
+
+export interface PairRanking {
+  a: Competitor;
+  b: Competitor;
+  value: number;
+  formattedValue: string;
+  detail?: string;
 }
 
 export interface Award {
@@ -15,6 +23,8 @@ export interface Award {
   value: number | string;
   icon: string;
   rankings: AwardRanking[];
+  pairRankings?: PairRanking[];
+  pairSeparator?: string;
   metricLabel: string;
   sortOrder: 'desc' | 'asc';
 }
@@ -23,7 +33,6 @@ export function calculateAwards(): Award[] {
   const competitors = getCompetitors();
   const submissions = getSubmissions();
   const votes = getVotes();
-  const rounds = getRounds();
   const roundResults = getRoundResults();
   
   const competitorMap = new Map(competitors.map(c => [c.id, c]));
@@ -174,154 +183,97 @@ export function calculateAwards(): Award[] {
     sortOrder: 'desc'
   });
 
-  // 6. Public Enemy - Person who got the most downvotes (negatives always count)
-  const downvotesReceived = new Map<string, number>();
-  competitors.forEach(c => downvotesReceived.set(c.id, 0));
-  votes.filter(v => v.points < 0).forEach(vote => {
-    const key = `${vote.spotifyUri}_${vote.roundId}`;
-    const submitterId = submissionLookup.get(key);
-    if (submitterId) {
-      downvotesReceived.set(submitterId, (downvotesReceived.get(submitterId) || 0) + Math.abs(vote.points));
-    }
+  // ── Pair awards: Best Buddies, One Sided Love, Sworn Enemies ──
+  // directed[giver][receiver] = total points giver awarded to receiver's songs
+  const directed = new Map<string, Map<string, number>>();
+  votes.forEach(vote => {
+    const submitterId = submissionLookup.get(`${vote.spotifyUri}_${vote.roundId}`);
+    if (!submitterId || submitterId === vote.voterId) return;
+    if (!directed.has(vote.voterId)) directed.set(vote.voterId, new Map());
+    const m = directed.get(vote.voterId)!;
+    m.set(submitterId, (m.get(submitterId) || 0) + vote.points);
   });
-  const downvoteRankings = createRankings(downvotesReceived, v => `${v} pts`);
-  const mostDownvoted = downvoteRankings[0];
-  awards.push({
-    id: 'public-enemy',
-    name: 'Public Enemy',
-    description: 'Received the most downvotes',
-    winner: mostDownvoted?.competitor || null,
-    value: mostDownvoted ? `${mostDownvoted.value} downvote points` : '0',
-    icon: 'skull',
-    rankings: downvoteRankings,
-    metricLabel: 'Downvote Pts',
-    sortOrder: 'desc'
-  });
+  const given = (from: string, to: string) => directed.get(from)?.get(to) || 0;
 
-  // 7. Best Buddies - People who gave each other the most points combined
-  const pairPoints = new Map<string, number>();
-  votes.forEach(vote => {
-    const key = `${vote.spotifyUri}_${vote.roundId}`;
-    const submitterId = submissionLookup.get(key);
-    if (submitterId && submitterId !== vote.voterId) {
-      const pairKey = [vote.voterId, submitterId].sort().join('_');
-      pairPoints.set(pairKey, (pairPoints.get(pairKey) || 0) + vote.points);
+  // Every possible combo of two players
+  const allPairs: { a: Competitor; b: Competitor; aToB: number; bToA: number }[] = [];
+  for (let i = 0; i < competitors.length; i++) {
+    for (let j = i + 1; j < competitors.length; j++) {
+      const a = competitors[i], b = competitors[j];
+      allPairs.push({ a, b, aToB: given(a.id, b.id), bToA: given(b.id, a.id) });
     }
-  });
-  const bestBuddies = [...pairPoints.entries()].sort((a, b) => b[1] - a[1])[0];
-  const buddyIds = bestBuddies ? bestBuddies[0].split('_') : [];
-  
-  // For pair awards, show points given to others
-  const pointsGivenToOthers = new Map<string, number>();
-  competitors.forEach(c => pointsGivenToOthers.set(c.id, 0));
-  votes.forEach(vote => {
-    const key = `${vote.spotifyUri}_${vote.roundId}`;
-    const submitterId = submissionLookup.get(key);
-    if (submitterId && submitterId !== vote.voterId) {
-      pointsGivenToOthers.set(vote.voterId, (pointsGivenToOthers.get(vote.voterId) || 0) + vote.points);
-    }
-  });
-  const buddiesRankings = createRankings(pointsGivenToOthers, v => `${v} pts given`);
-  
+  }
+
+  // 7. Best Buddies - pairs who gave each other the most points combined
+  const buddyPairs: PairRanking[] = allPairs
+    .map(p => ({
+      a: p.a, b: p.b,
+      value: p.aToB + p.bToA,
+      formattedValue: `${p.aToB + p.bToA} pts`,
+      detail: `${p.aToB} → · ← ${p.bToA}`,
+    }))
+    .sort((x, y) => y.value - x.value);
+  const topBuddies = buddyPairs[0];
   awards.push({
     id: 'best-buddies',
     name: 'Best Buddies',
     description: 'Gave each other the most points combined',
-    winner: buddyIds[0] ? competitorMap.get(buddyIds[0]) || null : null,
-    winnerSecondary: buddyIds[1] ? competitorMap.get(buddyIds[1]) || null : null,
-    value: bestBuddies ? `${bestBuddies[1]} combined points` : '0',
+    winner: topBuddies?.a || null,
+    winnerSecondary: topBuddies?.b || null,
+    value: topBuddies ? `${topBuddies.value} combined points` : '0',
     icon: 'heart',
-    rankings: buddiesRankings,
-    metricLabel: 'Pts Given',
+    rankings: [],
+    pairRankings: buddyPairs,
+    pairSeparator: '&',
+    metricLabel: 'Combined',
     sortOrder: 'desc'
   });
 
-  // 8. One Sided Love - Person who gave a lot to someone who didn't reciprocate
-  const directedPoints = new Map<string, Map<string, number>>();
-  votes.forEach(vote => {
-    const key = `${vote.spotifyUri}_${vote.roundId}`;
-    const submitterId = submissionLookup.get(key);
-    if (submitterId && submitterId !== vote.voterId) {
-      if (!directedPoints.has(vote.voterId)) {
-        directedPoints.set(vote.voterId, new Map());
-      }
-      const voterMap = directedPoints.get(vote.voterId)!;
-      voterMap.set(submitterId, (voterMap.get(submitterId) || 0) + vote.points);
-    }
-  });
-  
-  // Calculate max asymmetry for each person
-  const maxAsymmetryByPerson = new Map<string, number>();
-  competitors.forEach(c => maxAsymmetryByPerson.set(c.id, 0));
-  
-  directedPoints.forEach((targets, giverId) => {
-    targets.forEach((given, receiverId) => {
-      const received = directedPoints.get(receiverId)?.get(giverId) || 0;
-      const asymmetry = given - received;
-      if (asymmetry > (maxAsymmetryByPerson.get(giverId) || 0)) {
-        maxAsymmetryByPerson.set(giverId, asymmetry);
-      }
-    });
-  });
-  
-  const asymmetryRankings = createRankings(maxAsymmetryByPerson, v => `+${v} diff`);
-  
-  let maxAsymmetry = 0;
-  let oneSidedGiver: string | null = null;
-  let oneSidedReceiver: string | null = null;
-  
-  directedPoints.forEach((targets, giverId) => {
-    targets.forEach((given, receiverId) => {
-      const received = directedPoints.get(receiverId)?.get(giverId) || 0;
-      const asymmetry = given - received;
-      if (asymmetry > maxAsymmetry) {
-        maxAsymmetry = asymmetry;
-        oneSidedGiver = giverId;
-        oneSidedReceiver = receiverId;
-      }
-    });
-  });
+  // 8. One Sided Love - biggest gap between what one gave and what came back
+  const oneSidedPairs: PairRanking[] = allPairs
+    .map(p => {
+      const [giver, receiver, out, back] = p.aToB >= p.bToA
+        ? [p.a, p.b, p.aToB, p.bToA]
+        : [p.b, p.a, p.bToA, p.aToB];
+      return {
+        a: giver, b: receiver,
+        value: out - back,
+        formattedValue: `+${out - back}`,
+        detail: `gave ${out}, got ${back} back`,
+      };
+    })
+    .sort((x, y) => y.value - x.value);
+  const topOneSided = oneSidedPairs[0];
   awards.push({
     id: 'one-sided-love',
     name: 'One Sided Love',
     description: 'Gave lots of points to someone who didn\'t reciprocate',
-    winner: oneSidedGiver ? competitorMap.get(oneSidedGiver) || null : null,
-    winnerSecondary: oneSidedReceiver ? competitorMap.get(oneSidedReceiver) || null : null,
-    value: `${maxAsymmetry} point difference`,
+    winner: topOneSided?.a || null,
+    winnerSecondary: topOneSided?.b || null,
+    value: topOneSided ? `${topOneSided.value} point difference` : '0',
     icon: 'heart-crack',
-    rankings: asymmetryRankings,
-    metricLabel: 'Max Diff',
+    rankings: [],
+    pairRankings: oneSidedPairs,
+    pairSeparator: '→',
+    metricLabel: 'Gap',
     sortOrder: 'desc'
   });
 
-  // 9. Sworn Enemies - People who gave each other the lowest points
-  const worstEnemies = [...pairPoints.entries()].sort((a, b) => a[1] - b[1])[0];
-  const enemyIds = worstEnemies ? worstEnemies[0].split('_') : [];
-  
-  // For enemies, show points received from others — negatives always count, positives only if submitter voted
-  const pointsReceivedFromOthers = new Map<string, number>();
-  competitors.forEach(c => pointsReceivedFromOthers.set(c.id, 0));
-  votes.forEach(vote => {
-    const key = `${vote.spotifyUri}_${vote.roundId}`;
-    const submitterId = submissionLookup.get(key);
-    if (!submitterId || submitterId === vote.voterId) return;
-    const didVote = votedInRound.has(`${submitterId}_${vote.roundId}`);
-    if (didVote || vote.points < 0) {
-      pointsReceivedFromOthers.set(submitterId, (pointsReceivedFromOthers.get(submitterId) || 0) + vote.points);
-    }
-  });
-  const enemiesRankings = createRankings(pointsReceivedFromOthers, v => `${v} pts`, false);
-  
+  // 9. Sworn Enemies - pairs who gave each other the fewest points combined
+  const enemyPairs = [...buddyPairs].sort((x, y) => x.value - y.value);
+  const topEnemies = enemyPairs[0];
   awards.push({
     id: 'sworn-enemies',
     name: 'Sworn Enemies',
     description: 'Gave each other the lowest combined points',
-    winner: enemyIds[0] ? competitorMap.get(enemyIds[0]) || null : null,
-    winnerSecondary: enemyIds[1] ? competitorMap.get(enemyIds[1]) || null : null,
-    value: worstEnemies ? `${worstEnemies[1]} combined points` : '0',
+    winner: topEnemies?.a || null,
+    winnerSecondary: topEnemies?.b || null,
+    value: topEnemies ? `${topEnemies.value} combined points` : '0',
     icon: 'swords',
-    rankings: enemiesRankings,
-    metricLabel: 'Pts Received',
+    rankings: [],
+    pairRankings: enemyPairs,
+    pairSeparator: '&',
+    metricLabel: 'Combined',
     sortOrder: 'asc'
   });
 
@@ -411,76 +363,76 @@ export function calculateAwards(): Award[] {
     sortOrder: 'desc'
   });
 
-  // 13. Biggest Fall From Grace - Started high, ended low
-  const sortedRounds = [...rounds].sort((a, b) => new Date(a.created).getTime() - new Date(b.created).getTime());
-  const firstHalfRounds = sortedRounds.slice(0, Math.floor(sortedRounds.length / 2)).map(r => r.id);
-  const secondHalfRounds = sortedRounds.slice(Math.floor(sortedRounds.length / 2)).map(r => r.id);
-  
-  const firstHalfAvg = new Map<string, { total: number; count: number }>();
-  const secondHalfAvg = new Map<string, { total: number; count: number }>();
-  
-  roundResults.forEach(result => {
-    const isFirstHalf = firstHalfRounds.includes(result.round.id);
-    const targetMap = isFirstHalf ? firstHalfAvg : secondHalfAvg;
-    
-    result.standings.forEach((standing, index) => {
-      const current = targetMap.get(standing.competitor.id) || { total: 0, count: 0 };
-      current.total += index + 1;
-      current.count += 1;
-      targetMap.set(standing.competitor.id, current);
+  // 13 & 14. Fall From Grace / Redemption Arc
+  // Rounds were all created on day one, so order them by when they were actually
+  // played (earliest submission). Each finish becomes a percentile (1 = won,
+  // 0 = last, ties shared) so rounds with different field sizes compare fairly.
+  // We then fit a trend line through each player's season and see which way it points.
+  const roundStart = new Map<string, number>();
+  submissions.forEach(s => {
+    const t = new Date(s.created).getTime();
+    if (!isNaN(t) && t < (roundStart.get(s.roundId) ?? Infinity)) roundStart.set(s.roundId, t);
+  });
+  const playedResults = roundResults
+    .filter(r => roundStart.has(r.round.id) && r.standings.length > 1)
+    .sort((x, y) => roundStart.get(x.round.id)! - roundStart.get(y.round.id)!);
+
+  const finishes = new Map<string, { x: number; y: number }[]>();
+  playedResults.forEach((result, roundIndex) => {
+    const n = result.standings.length;
+    result.standings.forEach(standing => {
+      const rank = 1 + result.standings.filter(o => o.points > standing.points).length;
+      const pct = 1 - (rank - 1) / (n - 1);
+      const list = finishes.get(standing.competitor.id) || [];
+      list.push({ x: roundIndex, y: pct });
+      finishes.set(standing.competitor.id, list);
     });
   });
-  
-  const fallByCompetitor = new Map<string, number>();
-  competitors.forEach(c => {
-    const first = firstHalfAvg.get(c.id);
-    const second = secondHalfAvg.get(c.id);
-    if (first && second && first.count >= 3 && second.count >= 3) {
-      const firstAvgPos = first.total / first.count;
-      const secondAvgPos = second.total / second.count;
-      const fall = secondAvgPos - firstAvgPos;
-      fallByCompetitor.set(c.id, fall);
-    }
+
+  const typicalField = Math.max(2, Math.round(
+    playedResults.reduce((sum, r) => sum + r.standings.length, 0) / Math.max(1, playedResults.length)
+  ));
+  const seasonSpan = Math.max(1, playedResults.length - 1);
+
+  // Trend expressed as "places gained across the season" in a typical-sized field
+  const placesGained = new Map<string, number>();
+  finishes.forEach((pts, id) => {
+    if (pts.length < 5) return;
+    const mx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
+    const my = pts.reduce((s, p) => s + p.y, 0) / pts.length;
+    const num = pts.reduce((s, p) => s + (p.x - mx) * (p.y - my), 0);
+    const den = pts.reduce((s, p) => s + (p.x - mx) ** 2, 0);
+    if (den === 0) return;
+    placesGained.set(id, (num / den) * seasonSpan * (typicalField - 1));
   });
-  const fallRankings = createRankings(fallByCompetitor, v => `${v > 0 ? '+' : ''}${v.toFixed(1)} pos`);
+  const fmtPlaces = (v: number) => `${v > 0 ? '+' : ''}${v.toFixed(1)} places`;
+
+  const placesLost = new Map([...placesGained].map(([id, v]) => [id, -v]));
+  const fallRankings = createRankings(placesLost, v => fmtPlaces(-v));
   const fallenOne = fallRankings[0];
-  
   awards.push({
     id: 'fall-from-grace',
     name: 'Fall From Grace',
-    description: 'Started strong but dropped off',
-    winner: fallenOne?.competitor || null,
-    value: fallenOne ? `${fallenOne.value.toFixed(1)} positions lower` : 'N/A',
+    description: 'Trend line pointed furthest downhill across the season',
+    winner: fallenOne && fallenOne.value > 0 ? fallenOne.competitor : null,
+    value: fallenOne && fallenOne.value > 0 ? `Slid ~${fallenOne.value.toFixed(1)} places over the season` : 'Nobody fell',
     icon: 'trending-down',
     rankings: fallRankings,
-    metricLabel: 'Position Δ',
+    metricLabel: 'Trend',
     sortOrder: 'desc'
   });
 
-  // 14. Redemption Arc - Started low, ended high
-  const riseByCompetitor = new Map<string, number>();
-  competitors.forEach(c => {
-    const first = firstHalfAvg.get(c.id);
-    const second = secondHalfAvg.get(c.id);
-    if (first && second && first.count >= 3 && second.count >= 3) {
-      const firstAvgPos = first.total / first.count;
-      const secondAvgPos = second.total / second.count;
-      const rise = firstAvgPos - secondAvgPos;
-      riseByCompetitor.set(c.id, rise);
-    }
-  });
-  const riseRankings = createRankings(riseByCompetitor, v => `${v > 0 ? '+' : ''}${v.toFixed(1)} pos`);
+  const riseRankings = createRankings(placesGained, fmtPlaces);
   const risenOne = riseRankings[0];
-  
   awards.push({
     id: 'redemption-arc',
     name: 'Redemption Arc',
-    description: 'Started slow but rose to the top',
-    winner: risenOne?.competitor || null,
-    value: risenOne ? `${risenOne.value.toFixed(1)} positions higher` : 'N/A',
+    description: 'Trend line climbed the most across the season',
+    winner: risenOne && risenOne.value > 0 ? risenOne.competitor : null,
+    value: risenOne && risenOne.value > 0 ? `Climbed ~${risenOne.value.toFixed(1)} places over the season` : 'Nobody rose',
     icon: 'trending-up',
     rankings: riseRankings,
-    metricLabel: 'Position Δ',
+    metricLabel: 'Trend',
     sortOrder: 'desc'
   });
 

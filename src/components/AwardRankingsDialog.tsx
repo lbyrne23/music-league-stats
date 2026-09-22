@@ -45,26 +45,49 @@ const AwardRankingsDialog = ({ award, open, onOpenChange }: AwardRankingsDialogP
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">#</TableHead>
-                <TableHead>Player</TableHead>
+                <TableHead>{award.pairRankings ? 'Pair' : 'Player'}</TableHead>
                 <TableHead className="text-right">{award.metricLabel}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {award.rankings.map((ranking, index) => (
-                <TableRow key={ranking.competitor.id}>
-                  <TableCell className="py-2">
-                    <div className="flex items-center justify-center">
-                      {getRankIcon(index + 1)}
-                    </div>
-                  </TableCell>
-                  <TableCell className={`py-2 font-medium ${index === 0 ? 'text-gold' : ''}`}>
-                    {ranking.competitor.name}
-                  </TableCell>
-                  <TableCell className="py-2 text-right font-mono text-sm">
-                    {ranking.formattedValue}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {award.pairRankings
+                ? award.pairRankings.map((pair, index) => (
+                    <TableRow key={`${pair.a.id}_${pair.b.id}`}>
+                      <TableCell className="py-2">
+                        <div className="flex items-center justify-center">
+                          {getRankIcon(index + 1)}
+                        </div>
+                      </TableCell>
+                      <TableCell className={`py-2 font-medium ${index === 0 ? 'text-gold' : ''}`}>
+                        <div>
+                          {pair.a.name}{' '}
+                          <span className="text-muted-foreground">{award.pairSeparator ?? '&'}</span>{' '}
+                          {pair.b.name}
+                        </div>
+                        {pair.detail && (
+                          <div className="text-xs text-muted-foreground font-normal">{pair.detail}</div>
+                        )}
+                      </TableCell>
+                      <TableCell className="py-2 text-right font-mono text-sm">
+                        {pair.formattedValue}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : award.rankings.map((ranking, index) => (
+                    <TableRow key={ranking.competitor.id}>
+                      <TableCell className="py-2">
+                        <div className="flex items-center justify-center">
+                          {getRankIcon(index + 1)}
+                        </div>
+                      </TableCell>
+                      <TableCell className={`py-2 font-medium ${index === 0 ? 'text-gold' : ''}`}>
+                        {ranking.competitor.name}
+                      </TableCell>
+                      <TableCell className="py-2 text-right font-mono text-sm">
+                        {ranking.formattedValue}
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </ScrollArea>

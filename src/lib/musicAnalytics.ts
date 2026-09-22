@@ -1,5 +1,6 @@
 import { getSubmissions, getCompetitors, getVotes, getRounds, Submission, Round } from './parseData';
-import { inferGenreFromArtist } from './genreMapping';
+import { getArtistGenre, getTrackGenre, UNCLASSIFIED } from './genreMapping';
+import { splitArtists } from './genreTaxonomy';
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 
@@ -8,7 +9,8 @@ export interface ArtistStats {
   submissionCount: number;
   totalPoints: number;
   submitters: string[];
-  genres: string[];
+  genre: string;      // parent genre, or Unclassified
+  genres: string[];   // [parent, subgenre?] for the chips on artist cards
 }
 
 export interface AlbumStats {
@@ -47,6 +49,7 @@ export interface SubmitterMusicProfile {
   negativeVotesGiven: number;
   genreBreakdown: { genre: string; count: number; percentage: number }[];
   topGenres: string[];
+  unclassifiedCount: number; // tracks we couldn't place, left out of the percentages
   votingGenrePreference: { genre: string; pointsGiven: number }[];
   personality: string;
   personalityEmoji: string;
@@ -133,19 +136,21 @@ export function getArtistStats(): ArtistStats[] {
   const artistMap = new Map<string, ArtistStats>();
 
   submissions.forEach(sub => {
-    const artists = sub.artists.split(',').map(a => a.trim());
+    const artists = splitArtists(sub.artists);
     const key = `${sub.spotifyUri}_${sub.roundId}`;
     const points = pointsLookup.get(key) || 0;
     const submitterName = competitorMap.get(sub.submitterId) || 'Unknown';
 
     artists.forEach(artist => {
       if (!artistMap.has(artist)) {
+        const g = getArtistGenre(artist);
         artistMap.set(artist, {
           name: artist,
           submissionCount: 0,
           totalPoints: 0,
           submitters: [],
-          genres: inferGenreFromArtist(artist)
+          genre: g.genre,
+          genres: g.subgenre ? [g.genre, g.subgenre] : [g.genre]
         });
       }
       const stats = artistMap.get(artist)!;
@@ -193,24 +198,43 @@ export function getAlbumStats(): AlbumStats[] {
 // ─── Genre Stats ──────────────────────────────────────────────────────────────
 
 export function getGenreStats(): GenreStats[] {
-  const artistStats = getArtistStats();
-  const genreMap = new Map<string, GenreStats>();
+  const submissions = getSubmissions();
+  const votes = getVotes();
+  const { points: pointsLookup } = buildValidatedPointsLookup(votes, submissions);
 
-  artistStats.forEach(artist => {
-    artist.genres.forEach(genre => {
-      if (!genreMap.has(genre)) {
-        genreMap.set(genre, { genre, submissionCount: 0, totalPoints: 0, topArtists: [] });
-      }
-      const stats = genreMap.get(genre)!;
-      stats.submissionCount += artist.submissionCount;
-      stats.totalPoints += artist.totalPoints;
-      if (stats.topArtists.length < 5) {
-        stats.topArtists.push(artist.name);
-      }
-    });
+  const genreMap = new Map<string, GenreStats & { artistCounts: Map<string, number> }>();
+  submissions.forEach(sub => {
+    const { genre, artist: lead } = getTrackGenre(sub.artists);
+    if (genre === UNCLASSIFIED) return; // quarantined, see getUnclassified()
+    if (!genreMap.has(genre)) {
+      genreMap.set(genre, { genre, submissionCount: 0, totalPoints: 0, topArtists: [], artistCounts: new Map() });
+    }
+    const stats = genreMap.get(genre)!;
+    stats.submissionCount++;
+    stats.totalPoints += pointsLookup.get(`${sub.spotifyUri}_${sub.roundId}`) || 0;
+    if (lead) stats.artistCounts.set(lead, (stats.artistCounts.get(lead) || 0) + 1);
   });
 
-  return [...genreMap.values()].sort((a, b) => b.submissionCount - a.submissionCount);
+  return [...genreMap.values()]
+    .map(({ artistCounts, ...stats }) => ({
+      ...stats,
+      topArtists: [...artistCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name]) => name),
+    }))
+    .sort((a, b) => b.submissionCount - a.submissionCount);
+}
+
+// Tracks and artists we couldn't place. Add these to artistGenres.json as
+// "manual" entries, or run `npm run genres` to fetch them.
+export function getUnclassified(): { trackCount: number; artists: string[] } {
+  const submissions = getSubmissions();
+  const artists = new Set<string>();
+  let trackCount = 0;
+  submissions.forEach(sub => {
+    if (getTrackGenre(sub.artists).genre !== UNCLASSIFIED) return;
+    trackCount++;
+    splitArtists(sub.artists).forEach(a => artists.add(a));
+  });
+  return { trackCount, artists: [...artists].sort() };
 }
 
 // ─── Round Stats ──────────────────────────────────────────────────────────────
@@ -370,6 +394,8 @@ export function getSubmitterProfiles(): SubmitterMusicProfile[] {
   const profileMap = new Map<string, {
     artists: Set<string>;
     genres: Map<string, number>;
+    tags: Map<string, number>;
+    unclassified: number;
     count: number;
     votingGenres: Map<string, number>;
     pointsGiven: number;
@@ -381,6 +407,8 @@ export function getSubmitterProfiles(): SubmitterMusicProfile[] {
     profileMap.set(c.id, {
       artists: new Set(),
       genres: new Map(),
+      tags: new Map(),
+      unclassified: 0,
       count: 0,
       votingGenres: new Map(),
       pointsGiven: 0,
@@ -393,12 +421,18 @@ export function getSubmitterProfiles(): SubmitterMusicProfile[] {
     const profile = profileMap.get(sub.submitterId)!;
     profile.count++;
 
-    sub.artists.split(',').forEach(a => {
-      const artist = a.trim();
-      profile.artists.add(artist);
-      inferGenreFromArtist(artist).forEach(genre => {
-        profile.genres.set(genre, (profile.genres.get(genre) || 0) + 1);
-      });
+    splitArtists(sub.artists).forEach(artist => profile.artists.add(artist));
+
+    // One genre per track, so a three-way collab doesn't count three times
+    const { genre, tags } = getTrackGenre(sub.artists);
+    if (genre === UNCLASSIFIED) {
+      profile.unclassified++;
+      return;
+    }
+    profile.genres.set(genre, (profile.genres.get(genre) || 0) + 1);
+    tags.forEach(tag => {
+      const t = tag.toLowerCase();
+      profile.tags.set(t, (profile.tags.get(t) || 0) + 1);
     });
   });
 
@@ -413,19 +447,18 @@ export function getSubmitterProfiles(): SubmitterMusicProfile[] {
     const artists = submissionLookup.get(`${vote.spotifyUri}_${vote.roundId}`);
     if (!artists || vote.points <= 0) return;
 
-    artists.split(',').forEach(a => {
-      inferGenreFromArtist(a.trim()).forEach(genre => {
-        profile.votingGenres.set(genre, (profile.votingGenres.get(genre) || 0) + vote.points);
-      });
-    });
+    const { genre } = getTrackGenre(artists);
+    if (genre === UNCLASSIFIED) return;
+    profile.votingGenres.set(genre, (profile.votingGenres.get(genre) || 0) + vote.points);
   });
 
   // Build genre breakdown data for personality assignment
   const competitorGenreData = competitors.map(c => {
     const profile = profileMap.get(c.id)!;
-    const genreBreakdown = [...profile.genres.entries()]
+    // Personalities key off specific tags ("shoegaze", "80s") as well as parents
+    const genreBreakdown = [...profile.tags.entries(), ...profile.genres.entries()]
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 6)
+      .slice(0, 12)
       .map(([genre, count]) => ({ genre, count }));
     return { competitorId: c.id, genreBreakdown };
   });
@@ -464,6 +497,7 @@ export function getSubmitterProfiles(): SubmitterMusicProfile[] {
       negativeVotesGiven: profile.negativeVotesGiven,
       genreBreakdown,
       topGenres: genreBreakdown.slice(0, 3).map(g => g.genre),
+      unclassifiedCount: profile.unclassified,
       votingGenrePreference,
       personality: assignment.personality,
       personalityEmoji: assignment.emoji
@@ -529,6 +563,7 @@ export function getMusicStats() {
     negativeVotes,
     mostSubmittedArtist: artistStats[0]?.name || 'N/A',
     mostSubmittedAlbum: albumStats[0]?.name || 'N/A',
-    topGenre: genreStats[0]?.genre || 'N/A'
+    topGenre: genreStats[0]?.genre || 'N/A',
+    unclassifiedTracks: getUnclassified().trackCount
   };
 }

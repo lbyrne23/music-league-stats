@@ -1,0 +1,6 @@
+{
+  "_about": "Display-name fixes, keyed by competitor ID so they survive a re-export even if someone changes their Music League username. Anyone not listed uses their name from competitors.csv.",
+  "names": {
+    "1d843b6c8a8946b9bda7ad95b6ccc195": "Ellen Cronin"
+  }
+}
